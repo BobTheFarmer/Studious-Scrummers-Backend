@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.nighthawk.spring_portfolio.mvc.jokes.Jokes;
-import com.nighthawk.spring_portfolio.mvc.jokes.JokesJpaRepository;
+import com.nighthawk.spring_portfolio.mvc.jokes.Motherboard;
+import com.nighthawk.spring_portfolio.mvc.jokes.MotherboardJpaRepository;
 import com.nighthawk.spring_portfolio.mvc.note.Note;
 import com.nighthawk.spring_portfolio.mvc.note.NoteJpaRepository;
 import com.nighthawk.spring_portfolio.mvc.person.Person;
@@ -18,7 +18,7 @@ import java.util.List;
 @Component
 @Configuration // Scans Application for ModelInit Bean, this detects CommandLineRunner
 public class ModelInit {  
-    @Autowired JokesJpaRepository jokesRepo;
+    @Autowired MotherboardJpaRepository jokesRepo;
     @Autowired NoteJpaRepository noteRepo;
     @Autowired PersonDetailsService personService;
 
@@ -27,12 +27,12 @@ public class ModelInit {
         return args -> {
 
             // Joke database is populated with starting jokes
-            String[] jokesArray = Jokes.init();
+            /*String[] jokesArray = Jokes.init();
             for (String joke : jokesArray) {
                 List<Jokes> jokeFound = jokesRepo.findByJokeIgnoreCase(joke);  // JPA lookup
                 if (jokeFound.size() == 0)
                     jokesRepo.save(new Jokes(null, joke, 0, 0)); //JPA save
-            }
+            }*/
 
             // Person database is populated with test data
             Person[] personArray = Person.init();
