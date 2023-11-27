@@ -70,7 +70,7 @@ public class MotherboardApiController {
                                              @RequestParam("desc") String desc,
                                              @RequestParam("ddr") int ddr,
                                              @RequestParam("gigahertz") int gigahertz,
-                                             @RequestParam("gigahertz") boolean onboardWifi) {
+                                             @RequestParam("onboardWifi") boolean onboardWifi) {
 
         // A person object WITHOUT ID will create a new record with default roles as student
         Motherboard motherboard = new Motherboard(title, desc, 0, ddr, gigahertz, onboardWifi);
