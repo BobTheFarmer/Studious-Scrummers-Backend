@@ -4,43 +4,23 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 import jakarta.persistence.*;
 
 @Data  // Annotations to simplify writing code (ie constructors, setters)
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity // Annotation to simplify creating an entity, which is a lightweight persistence domain object. Typically, an entity represents a table in a relational database, and each entity instance corresponds to a row in that table.
-public class Motherboard {
+public class Jokes {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(unique=true)
-    private String title;
-    @Column(unique=false)
-    private String desc;
-    @Column(unique=false)
-    private int likes;
+    private String joke;
 
-    @Column(unique=false)
-    private int ddr;
-    @Column(unique=false)
-    private int gigahertz;
-    @Column(unique=false)
-    private boolean onboardWifi;
+    private int haha;
+    private int boohoo;
 
-    public Motherboard(String title, String desc, int likes, int ddr, int gigahertz, boolean onboardWifi) {
-        this.title = title;
-        this.desc = desc;
-        this.likes = likes;
-        this.ddr = ddr;
-        this.gigahertz = gigahertz;
-        this.onboardWifi = onboardWifi;
-    }
-    
-    
     // starting jokes
     public static String[] init() {
         final String[] jokesArray = {
