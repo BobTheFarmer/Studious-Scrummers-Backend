@@ -76,24 +76,37 @@ public class AnalyticsApiController {
     Heap Sort*/
 
     @GetMapping("/bubble")
-    public ResponseEntity<String> bubble(@RequestParam("list") String serializedUnsortedList) {
-        int[] unsortedList;
-        try {
-            unsortedList = unserialize(serializedUnsortedList);
-        }
-        catch(Exception e) {
-            return new ResponseEntity<>("List could not be unserialized. It needs to be in a format like this: \"1,2,3.\"", HttpStatus.BAD_REQUEST);
-        }
-
-        long startTime = System.nanoTime();
-        //Sort the list
-        int[] sortedList = unsortedList; //Change this into the required sorting method
-
-        long endTime = System.nanoTime();
-        long time = endTime - startTime;
-        repository.save(new Analytics(null, time, "type", 0/*iterations*/, serializedUnsortedList, serialize(sortedList)));
-        return new ResponseEntity<>(serialize(sortedList), HttpStatus.OK);
+public ResponseEntity<String> bubble(@RequestParam("list") String serializedUnsortedList) {
+    int[] unsortedList;
+    try {
+        unsortedList = unserialize(serializedUnsortedList);
+    } catch (Exception e) {
+        return new ResponseEntity<>("List could not be unserialized. It needs to be in a format like this: \"1,2,3.\"", HttpStatus.BAD_REQUEST);
     }
+
+    long startTime = System.nanoTime();
+    
+    // Sort the list using Bubble Sort
+    int n = unsortedList.length;
+    for (int i = 0; i < n-1; i++) {
+        for (int j = 0; j < n-i-1; j++) {
+            if (unsortedList[j] > unsortedList[j+1]) {
+                // swap temp and arr[i]
+                int temp = unsortedList[j];
+                unsortedList[j] = unsortedList[j+1];
+                unsortedList[j+1] = temp;
+            }
+        }
+    }
+
+    long endTime = System.nanoTime();
+    long time = endTime - startTime;
+    
+    repository.save(new Analytics(null, time, "bubble", 0 /*iterations*/, serializedUnsortedList, serialize(unsortedList)));
+    
+    return new ResponseEntity<>(serialize(unsortedList), HttpStatus.OK);
+}
+
 
     @GetMapping("/selection")
     public ResponseEntity<String> selection(@RequestParam("list") String serializedUnsortedList) {
