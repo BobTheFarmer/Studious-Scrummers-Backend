@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.nighthawk.spring_portfolio.AnalyticsJpaRepository;
 import com.nighthawk.spring_portfolio.EvenFibonacci;
 import com.nighthawk.spring_portfolio.Fibonacci;
 import com.nighthawk.spring_portfolio.OddFibonacci;

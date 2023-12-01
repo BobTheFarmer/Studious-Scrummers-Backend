@@ -1,10 +1,8 @@
-package com.nighthawk.spring_portfolio;
+package com.nighthawk.spring_portfolio.mvc.analytics;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import com.nighthawk.spring_portfolio.mvc.analytics.Analytics;
 
 // JPA is an object-relational mapping (ORM) to persistent data, originally relational databases (SQL). Today JPA implementations has been extended for NoSQL.
 public interface AnalyticsJpaRepository extends JpaRepository<Analytics, Long> {
