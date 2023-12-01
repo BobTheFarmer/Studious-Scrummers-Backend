@@ -108,40 +108,45 @@ public ResponseEntity<String> bubble(@RequestParam("list") String serializedUnso
 }
 
 
-    @GetMapping("/selection")
-    public ResponseEntity<String> selection(@RequestParam("list") String serializedUnsortedList) {
-        int[] unsortedList;
-        try {
-            unsortedList = unserialize(serializedUnsortedList);
-        }
-        catch(Exception e) {
-            return new ResponseEntity<>("List could not be unserialized. It needs to be in a format like this: \"1,2,3.\"", HttpStatus.BAD_REQUEST);
-        }
-    
-        long startTime = System.nanoTime();
+@GetMapping("/selection")
+public ResponseEntity<String> selection(@RequestParam("list") String serializedUnsortedList) {
+    int[] unsortedList;
+    try {
+        unsortedList = unserialize(serializedUnsortedList);
+    } catch (Exception e) {
+        return new ResponseEntity<>("List could not be unserialized. It needs to be in a format like this: \"1,2,3.\"", HttpStatus.BAD_REQUEST);
+    }
 
-        int[] sortedList = selectionSort(unsortedList);
-    
-        long endTime = System.nanoTime();
-        long time = endTime - startTime;
-        repository.save(new Analytics(null, time, "Selection", sortedList.length, serializedUnsortedList, serialize(sortedList)));
-        return new ResponseEntity<>(serialize(sortedList), HttpStatus.OK);
-    }
-    
-    public int[] selectionSort(int[] arr) {   //Select each element that is highest and move it to needed pos
-        for (int i = 0; i < arr.length - 1; i++) {
-            int min_idx = i;
-            for (int j = i + 1; j < arr.length; j++)
-                if (arr[j] < arr[min_idx])
-                    min_idx = j;
-    
-            int temp = arr[min_idx];
-            arr[min_idx] = arr[i];
-            arr[i] = temp;
+    long startTime = System.nanoTime();
+
+    int[] sortedList = selectionSort(unsortedList);
+
+    long endTime = System.nanoTime();
+    long time = endTime - startTime;
+
+    repository.save(new Analytics(null, time, "Selection", sortedList.length, serializedUnsortedList, serialize(sortedList)));
+    return new ResponseEntity<>(serialize(sortedList), HttpStatus.OK);
+}
+
+private int[] selectionSort(int[] arr) {
+    int n = arr.length;
+
+    for (int i = 0; i < n - 1; i++) {
+        int minIndex = i;
+        for (int j = i + 1; j < n; j++) {
+            if (arr[j] < arr[minIndex]) {
+                minIndex = j;
+            }
         }
-        return arr;
+        // Swap the found minimum element with the first element
+        int temp = arr[minIndex];
+        arr[minIndex] = arr[i];
+        arr[i] = temp;
     }
-    
+
+    return arr;
+}
+
 
     @GetMapping("/insertion")
     public ResponseEntity<String> insertion(@RequestParam("list") String serializedUnsortedList) {
