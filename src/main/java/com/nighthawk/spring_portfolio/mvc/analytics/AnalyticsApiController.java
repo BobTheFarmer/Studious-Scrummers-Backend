@@ -5,12 +5,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.nighthawk.spring_portfolio.AnalyticsJpaRepository;
+import com.nighthawk.spring_portfolio.EvenFibonacci;
+import com.nighthawk.spring_portfolio.Fibonacci;
+import com.nighthawk.spring_portfolio.OddFibonacci;
+
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController // annotation to simplify the creation of RESTful web services
 @RequestMapping("/api/analytics")  // all requests in file begin with this URI
@@ -245,4 +251,20 @@ public class AnalyticsApiController {
     }
     
     
+    
+    @GetMapping("/fibonacci")
+    public ResponseEntity<String> fibonacci(@RequestParam("values") int numberOfValues,
+    @RequestParam("even") boolean even) {
+        if(numberOfValues > 150 || numberOfValues < 1) {
+            return new ResponseEntity<>("Requests for more than 150 or less than 1 values not allowed", HttpStatus.BAD_REQUEST);
+        }
+        
+        String fibonacciValues = Stream.iterate(0, i -> i + 1)
+                                    .limit(numberOfValues)
+                                    .map(i -> (even ? new EvenFibonacci(i) : new OddFibonacci(i)).calculate())
+                                    .map(String::valueOf)
+                                    .collect(Collectors.joining(", "));
+        return new ResponseEntity<>(fibonacciValues, HttpStatus.OK);
+    }
+
 }
