@@ -18,13 +18,11 @@ public class Analytics {
 
 
     @Column(unique=false)
-    private int time;
+    private long time;
     @Column(unique=false)
     private String type;
     @Column(unique=false)
-    private int merges;
-    @Column(unique=false)
-    private int swaps;
+    private int iterations;
     @Column(unique=false)
     private String serializedUnsorted;
     @Column(unique=false)

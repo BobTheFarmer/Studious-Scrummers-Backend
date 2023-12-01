@@ -38,14 +38,14 @@ public class AnalyticsApiController {
      */
 
     @PostMapping("/post")
-    public ResponseEntity<Object> postPerson(@RequestParam("time") int time,
+    public ResponseEntity<Object> postPerson(@RequestParam("time") long time,
     @RequestParam("type") String type,
     @RequestParam("iterations") int iterations,
     @RequestParam("swaps") int swaps,
     @RequestParam("serializedUnsorted") String serializedUnsorted,
     @RequestParam("serializedSorted") String serializedSorted) {
 
-        repository.save(new Analytics(null, time, type, iterations, swaps, serializedUnsorted, serializedSorted));
+        repository.save(new Analytics(null, time, type, iterations, serializedUnsorted, serializedSorted));
         return new ResponseEntity<>("Created successfully", HttpStatus.CREATED);
     }
 
@@ -80,9 +80,13 @@ public class AnalyticsApiController {
             return new ResponseEntity<>("List could not be unserialized. It needs to be in a format like this: \"1,2,3.\"", HttpStatus.BAD_REQUEST);
         }
 
+        long startTime = System.nanoTime();
         //Sort the list
         int[] sortedList = unsortedList; //Change this into the required sorting method
 
+        long endTime = System.nanoTime();
+        long time = endTime - startTime;
+        repository.save(new Analytics(null, time, "type", 0/*iterations*/, serializedUnsortedList, serialize(sortedList)));
         return new ResponseEntity<>(serialize(sortedList), HttpStatus.OK);
     }
 
@@ -96,9 +100,13 @@ public class AnalyticsApiController {
             return new ResponseEntity<>("List could not be unserialized. It needs to be in a format like this: \"1,2,3.\"", HttpStatus.BAD_REQUEST);
         }
 
+        long startTime = System.nanoTime();
         //Sort the list
         int[] sortedList = unsortedList; //Change this into the required sorting method
 
+        long endTime = System.nanoTime();
+        long time = endTime - startTime;
+        repository.save(new Analytics(null, time, "type", 0/*iterations*/, serializedUnsortedList, serialize(sortedList)));
         return new ResponseEntity<>(serialize(sortedList), HttpStatus.OK);
     }
 
@@ -112,9 +120,13 @@ public class AnalyticsApiController {
             return new ResponseEntity<>("List could not be unserialized. It needs to be in a format like this: \"1,2,3.\"", HttpStatus.BAD_REQUEST);
         }
 
+        long startTime = System.nanoTime();
         //Sort the list
         int[] sortedList = unsortedList; //Change this into the required sorting method
 
+        long endTime = System.nanoTime();
+        long time = endTime - startTime;
+        repository.save(new Analytics(null, time, "type", 0/*iterations*/, serializedUnsortedList, serialize(sortedList)));
         return new ResponseEntity<>(serialize(sortedList), HttpStatus.OK);
     }
 
@@ -128,9 +140,13 @@ public class AnalyticsApiController {
             return new ResponseEntity<>("List could not be unserialized. It needs to be in a format like this: \"1,2,3.\"", HttpStatus.BAD_REQUEST);
         }
 
+        long startTime = System.nanoTime();
         //Sort the list
         int[] sortedList = unsortedList; //Change this into the required sorting method
 
+        long endTime = System.nanoTime();
+        long time = endTime - startTime;
+        repository.save(new Analytics(null, time, "type", 0/*iterations*/, serializedUnsortedList, serialize(sortedList)));
         return new ResponseEntity<>(serialize(sortedList), HttpStatus.OK);
     }
 
@@ -144,9 +160,13 @@ public class AnalyticsApiController {
             return new ResponseEntity<>("List could not be unserialized. It needs to be in a format like this: \"1,2,3.\"", HttpStatus.BAD_REQUEST);
         }
 
+        long startTime = System.nanoTime();
         //Sort the list
         int[] sortedList = unsortedList; //Change this into the required sorting method
 
+        long endTime = System.nanoTime();
+        long time = endTime - startTime;
+        repository.save(new Analytics(null, time, "type", 0/*iterations*/, serializedUnsortedList, serialize(sortedList)));
         return new ResponseEntity<>(serialize(sortedList), HttpStatus.OK);
     }
 
@@ -155,14 +175,59 @@ public class AnalyticsApiController {
         int[] unsortedList;
         try {
             unsortedList = unserialize(serializedUnsortedList);
-        }
-        catch(Exception e) {
+        } catch(Exception e) {
             return new ResponseEntity<>("List could not be unserialized. It needs to be in a format like this: \"1,2,3.\"", HttpStatus.BAD_REQUEST);
         }
-
-        //Sort the list
-        int[] sortedList = unsortedList; //Change this into the required sorting method
-
-        return new ResponseEntity<>(serialize(sortedList), HttpStatus.OK);
+    
+        int n = unsortedList.length;
+        int iterations = 0;
+    
+        long startTime = System.nanoTime();
+    
+        for (int i = n / 2 - 1; i >= 0; i--) {
+            iterations++;
+            heapify(unsortedList, n, i);
+        }
+    
+        for (int i=n-1; i>=0; i--) {
+            iterations++;
+            int temp = unsortedList[0];
+            unsortedList[0] = unsortedList[i];
+            unsortedList[i] = temp;
+    
+            heapify(unsortedList, i, 0);
+        }
+    
+        long endTime = System.nanoTime();
+        long time = endTime - startTime;
+    
+        String type = "heap";
+        String serializedSorted = serialize(unsortedList);
+    
+        repository.save(new Analytics(null, time, type, iterations, serializedUnsortedList, serializedSorted));
+        return new ResponseEntity<>(serializedSorted, HttpStatus.OK);
     }
+    
+    void heapify(int arr[], int n, int i) {
+        int largest = i;
+    
+        int l = 2*i + 1;
+        int r = 2*i + 2;
+    
+        if (l < n && arr[l] > arr[largest])
+            largest = l;
+    
+        if (r < n && arr[r] > arr[largest])
+            largest = r;
+    
+        if (largest != i) {
+            int swap = arr[i];
+            arr[i] = arr[largest];
+            arr[largest] = swap;
+    
+            heapify(arr, n, largest);
+        }
+    }
+    
+    
 }
