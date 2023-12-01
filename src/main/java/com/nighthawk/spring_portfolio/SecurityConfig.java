@@ -70,7 +70,7 @@ public class SecurityConfig {
 				// list the requests/endpoints need to be authenticated
 				.authorizeHttpRequests(auth -> auth
 					.requestMatchers("/authenticate").permitAll()
-					.requestMatchers("/mvc/person/update/**", "/mvc/person/delete/**").permitAll()
+					.requestMatchers("/mvc/person/update/**", "/mvc/person/delete/**", "/mvc/person/post").permitAll()
 					.requestMatchers("/api/person/**").permitAll()
 					.requestMatchers("/api/person/post**").permitAll()
 					.requestMatchers("/**").permitAll()
