@@ -99,16 +99,31 @@ public class AnalyticsApiController {
         catch(Exception e) {
             return new ResponseEntity<>("List could not be unserialized. It needs to be in a format like this: \"1,2,3.\"", HttpStatus.BAD_REQUEST);
         }
-
+    
         long startTime = System.nanoTime();
-        //Sort the list
-        int[] sortedList = unsortedList; //Change this into the required sorting method
 
+        int[] sortedList = selectionSort(unsortedList);
+    
         long endTime = System.nanoTime();
         long time = endTime - startTime;
-        repository.save(new Analytics(null, time, "type", 0/*iterations*/, serializedUnsortedList, serialize(sortedList)));
+        repository.save(new Analytics(null, time, "Selection", sortedList.length, serializedUnsortedList, serialize(sortedList)));
         return new ResponseEntity<>(serialize(sortedList), HttpStatus.OK);
     }
+    
+    public int[] selectionSort(int[] arr) {   //Select each element that is highest and move it to needed pos
+        for (int i = 0; i < arr.length - 1; i++) {
+            int min_idx = i;
+            for (int j = i + 1; j < arr.length; j++)
+                if (arr[j] < arr[min_idx])
+                    min_idx = j;
+    
+            int temp = arr[min_idx];
+            arr[min_idx] = arr[i];
+            arr[i] = temp;
+        }
+        return arr;
+    }
+    
 
     @GetMapping("/insertion")
     public ResponseEntity<String> insertion(@RequestParam("list") String serializedUnsortedList) {
@@ -201,7 +216,7 @@ public class AnalyticsApiController {
         long endTime = System.nanoTime();
         long time = endTime - startTime;
     
-        String type = "heap";
+        String type = "Heap";
         String serializedSorted = serialize(unsortedList);
     
         repository.save(new Analytics(null, time, type, iterations, serializedUnsortedList, serializedSorted));
