@@ -9,6 +9,9 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 @RestController // annotation to simplify the creation of RESTful web services
 @RequestMapping("/api/analytics")  // all requests in file begin with this URI
 public class AnalyticsApiController {
@@ -44,5 +47,122 @@ public class AnalyticsApiController {
 
         repository.save(new Analytics(null, time, type, iterations, swaps, serializedUnsorted, serializedSorted));
         return new ResponseEntity<>("Created successfully", HttpStatus.CREATED);
+    }
+
+    //Sorting
+    public static String serialize(int[] numbers) {
+        return Arrays.stream(numbers)
+                     .mapToObj(String::valueOf)
+                     .collect(Collectors.joining(","));
+    }
+
+    public static int[] unserialize(String numbersString) {
+        return Arrays.stream(numbersString.split(","))
+                     .mapToInt(Integer::parseInt)
+                     .toArray();
+    }
+
+    /*Sorting Types:
+    Bubble Sort
+    Selection Sort
+    Insertion Sort
+    Merge Sort
+    Quick Sort
+    Heap Sort*/
+
+    @GetMapping("/bubble")
+    public ResponseEntity<String> bubble(@RequestParam("list") String serializedUnsortedList) {
+        int[] unsortedList;
+        try {
+            unsortedList = unserialize(serializedUnsortedList);
+        }
+        catch(Exception e) {
+            return new ResponseEntity<>("List could not be unserialized. It needs to be in a format like this: \"1,2,3.\"", HttpStatus.BAD_REQUEST);
+        }
+
+        //Sort the list
+        int[] sortedList = unsortedList; //Change this into the required sorting method
+
+        return new ResponseEntity<>(serialize(sortedList), HttpStatus.OK);
+    }
+
+    @GetMapping("/selection")
+    public ResponseEntity<String> selection(@RequestParam("list") String serializedUnsortedList) {
+        int[] unsortedList;
+        try {
+            unsortedList = unserialize(serializedUnsortedList);
+        }
+        catch(Exception e) {
+            return new ResponseEntity<>("List could not be unserialized. It needs to be in a format like this: \"1,2,3.\"", HttpStatus.BAD_REQUEST);
+        }
+
+        //Sort the list
+        int[] sortedList = unsortedList; //Change this into the required sorting method
+
+        return new ResponseEntity<>(serialize(sortedList), HttpStatus.OK);
+    }
+
+    @GetMapping("/insertion")
+    public ResponseEntity<String> insertion(@RequestParam("list") String serializedUnsortedList) {
+        int[] unsortedList;
+        try {
+            unsortedList = unserialize(serializedUnsortedList);
+        }
+        catch(Exception e) {
+            return new ResponseEntity<>("List could not be unserialized. It needs to be in a format like this: \"1,2,3.\"", HttpStatus.BAD_REQUEST);
+        }
+
+        //Sort the list
+        int[] sortedList = unsortedList; //Change this into the required sorting method
+
+        return new ResponseEntity<>(serialize(sortedList), HttpStatus.OK);
+    }
+
+    @GetMapping("/merge")
+    public ResponseEntity<String> merge(@RequestParam("list") String serializedUnsortedList) {
+        int[] unsortedList;
+        try {
+            unsortedList = unserialize(serializedUnsortedList);
+        }
+        catch(Exception e) {
+            return new ResponseEntity<>("List could not be unserialized. It needs to be in a format like this: \"1,2,3.\"", HttpStatus.BAD_REQUEST);
+        }
+
+        //Sort the list
+        int[] sortedList = unsortedList; //Change this into the required sorting method
+
+        return new ResponseEntity<>(serialize(sortedList), HttpStatus.OK);
+    }
+
+    @GetMapping("/quick")
+    public ResponseEntity<String> quick(@RequestParam("list") String serializedUnsortedList) {
+        int[] unsortedList;
+        try {
+            unsortedList = unserialize(serializedUnsortedList);
+        }
+        catch(Exception e) {
+            return new ResponseEntity<>("List could not be unserialized. It needs to be in a format like this: \"1,2,3.\"", HttpStatus.BAD_REQUEST);
+        }
+
+        //Sort the list
+        int[] sortedList = unsortedList; //Change this into the required sorting method
+
+        return new ResponseEntity<>(serialize(sortedList), HttpStatus.OK);
+    }
+
+    @GetMapping("/heap")
+    public ResponseEntity<String> heap(@RequestParam("list") String serializedUnsortedList) {
+        int[] unsortedList;
+        try {
+            unsortedList = unserialize(serializedUnsortedList);
+        }
+        catch(Exception e) {
+            return new ResponseEntity<>("List could not be unserialized. It needs to be in a format like this: \"1,2,3.\"", HttpStatus.BAD_REQUEST);
+        }
+
+        //Sort the list
+        int[] sortedList = unsortedList; //Change this into the required sorting method
+
+        return new ResponseEntity<>(serialize(sortedList), HttpStatus.OK);
     }
 }
