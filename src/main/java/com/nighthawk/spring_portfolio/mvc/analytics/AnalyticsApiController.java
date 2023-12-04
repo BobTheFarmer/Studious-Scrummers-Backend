@@ -188,7 +188,7 @@ private int[] selectionSort(int[] arr) {
         return new ResponseEntity<>(serialize(sortedList), HttpStatus.OK);
     }
 
-    @GetMapping("/quick")
+    @GetMapping("/bucket")
     public ResponseEntity<String> quick(@RequestParam("list") String serializedUnsortedList) {
         int[] unsortedList;
         try {
@@ -208,7 +208,7 @@ private int[] selectionSort(int[] arr) {
         return new ResponseEntity<>(serialize(sortedList), HttpStatus.OK);
     }
 
-    @GetMapping("/heap")
+    @GetMapping("/shell")
     public ResponseEntity<String> heap(@RequestParam("list") String serializedUnsortedList) {
         int[] unsortedList;
         try {
