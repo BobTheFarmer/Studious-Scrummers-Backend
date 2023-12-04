@@ -208,7 +208,46 @@ private int[] selectionSort(int[] arr) {
         return new ResponseEntity<>(serialize(sortedList), HttpStatus.OK);
     }
 
-    @GetMapping("/shell")
+    /*@GetMapping("/shell")
+    public ResponseEntity<String> shell(@RequestParam("list") String serializedUnsortedList) {
+        int[] unsortedList;
+        try {
+            unsortedList = unserialize(serializedUnsortedList);
+        } catch(Exception e) {
+            return new ResponseEntity<>("List could not be unserialized. It needs to be in a format like this: \"1,2,3.\"", HttpStatus.BAD_REQUEST);
+        }
+    
+        int n = unsortedList.length;
+        int iterations = 0;
+    
+        long startTime = System.nanoTime();
+    
+        for (int i = n / 2 - 1; i >= 0; i--) {
+            iterations++;
+            heapify(unsortedList, n, i);
+        }
+    
+        for (int i=n-1; i>=0; i--) {
+            iterations++;
+            int temp = unsortedList[0];
+            unsortedList[0] = unsortedList[i];
+            unsortedList[i] = temp;
+    
+            heapify(unsortedList, i, 0);
+        }
+    
+        long endTime = System.nanoTime();
+        long time = endTime - startTime;
+    
+        String type = "Shell";
+        String serializedSorted = serialize(unsortedList);
+    
+        repository.save(new Analytics(null, time, type, iterations, serializedUnsortedList, serializedSorted));
+        return new ResponseEntity<>(serializedSorted, HttpStatus.OK);
+    }*/
+    
+
+    @GetMapping("/heap")
     public ResponseEntity<String> heap(@RequestParam("list") String serializedUnsortedList) {
         int[] unsortedList;
         try {
@@ -245,7 +284,6 @@ private int[] selectionSort(int[] arr) {
         repository.save(new Analytics(null, time, type, iterations, serializedUnsortedList, serializedSorted));
         return new ResponseEntity<>(serializedSorted, HttpStatus.OK);
     }
-    
     void heapify(int arr[], int n, int i) {
         int largest = i;
     
