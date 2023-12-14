@@ -75,176 +75,72 @@ public class AnalyticsApiController {
     Quick Sort
     Heap Sort*/
 
+    private SortingMethods sorter = new SortingMethods();
+
     @GetMapping("/bubble")
-public ResponseEntity<String> bubble(@RequestParam("list") String serializedUnsortedList) {
-    int[] unsortedList;
-    try {
-        unsortedList = unserialize(serializedUnsortedList);
-    } catch (Exception e) {
-        return new ResponseEntity<>("List could not be unserialized. It needs to be in a format like this: \"1,2,3.\"", HttpStatus.BAD_REQUEST);
-    }
-
-    long startTime = System.nanoTime();
-    
-    // Sort the list using Bubble Sort
-    int n = unsortedList.length;
-    for (int i = 0; i < n-1; i++) {
-        for (int j = 0; j < n-i-1; j++) {
-            if (unsortedList[j] > unsortedList[j+1]) {
-                // swap temp and arr[i]
-                int temp = unsortedList[j];
-                unsortedList[j] = unsortedList[j+1];
-                unsortedList[j+1] = temp;
-            }
+    public ResponseEntity<String> bubble(@RequestParam("list") String serializedUnsortedList) {
+        int[] unsortedList;
+        try {
+            unsortedList = sorter.unserialize(serializedUnsortedList);
+        } catch (Exception e) {
+            return new ResponseEntity<>("List could not be unserialized. It needs to be in a format like this: \"1,2,3.\"", HttpStatus.BAD_REQUEST);
         }
+        // Sort the list using Bubble Sort
+        int[] sortedList = sorter.bubbleSort(unsortedList);
+        return new ResponseEntity<>(sorter.serialize(sortedList), HttpStatus.OK);
     }
 
-    long endTime = System.nanoTime();
-    long time = endTime - startTime;
-    
-    repository.save(new Analytics(null, time, "bubble", 0 /*iterations*/, serializedUnsortedList, serialize(unsortedList)));
-    
-    return new ResponseEntity<>(serialize(unsortedList), HttpStatus.OK);
-}
-
-
-@GetMapping("/selection")
-public ResponseEntity<String> selection(@RequestParam("list") String serializedUnsortedList) {
-    int[] unsortedList;
-    try {
-        unsortedList = unserialize(serializedUnsortedList);
-    } catch (Exception e) {
-        return new ResponseEntity<>("List could not be unserialized. It needs to be in a format like this: \"1,2,3.\"", HttpStatus.BAD_REQUEST);
-    }
-
-    long startTime = System.nanoTime();
-
-    int[] sortedList = selectionSort(unsortedList);
-
-    long endTime = System.nanoTime();
-    long time = endTime - startTime;
-
-    repository.save(new Analytics(null, time, "Selection", sortedList.length, serializedUnsortedList, serialize(sortedList)));
-    return new ResponseEntity<>(serialize(sortedList), HttpStatus.OK);
-}
-
-private int[] selectionSort(int[] arr) {
-    int n = arr.length;
-
-    for (int i = 0; i < n - 1; i++) {
-        int minIndex = i;
-        for (int j = i + 1; j < n; j++) {
-            if (arr[j] < arr[minIndex]) {
-                minIndex = j;
-            }
+    @GetMapping("/selection")
+    public ResponseEntity<String> selection(@RequestParam("list") String serializedUnsortedList) {
+        int[] unsortedList;
+        try {
+            unsortedList = unserialize(serializedUnsortedList);
+        } catch (Exception e) {
+            return new ResponseEntity<>("List could not be unserialized. It needs to be in a format like this: \"1,2,3.\"", HttpStatus.BAD_REQUEST);
         }
-        // Swap the found minimum element with the first element
-        int temp = arr[minIndex];
-        arr[minIndex] = arr[i];
-        arr[i] = temp;
+        // Sort the list using Selection Sort
+        int[] sortedList = sorter.selectionSort(unsortedList);
+        return new ResponseEntity<>(serialize(sortedList), HttpStatus.OK);
     }
-
-    return arr;
-}
-
 
     @GetMapping("/insertion")
     public ResponseEntity<String> insertion(@RequestParam("list") String serializedUnsortedList) {
         int[] unsortedList;
         try {
-            unsortedList = unserialize(serializedUnsortedList);
-        }
-        catch(Exception e) {
+            unsortedList = sorter.unserialize(serializedUnsortedList);
+        } catch (Exception e) {
             return new ResponseEntity<>("List could not be unserialized. It needs to be in a format like this: \"1,2,3.\"", HttpStatus.BAD_REQUEST);
         }
-
-        long startTime = System.nanoTime();
-        //Sort the list
-        int[] sortedList = unsortedList; //Change this into the required sorting method
-
-        long endTime = System.nanoTime();
-        long time = endTime - startTime;
-        repository.save(new Analytics(null, time, "type", 0/*iterations*/, serializedUnsortedList, serialize(sortedList)));
-        return new ResponseEntity<>(serialize(sortedList), HttpStatus.OK);
+        // Sort the list using Insertion Sort
+        int[] sortedList = sorter.insertionSort(unsortedList);
+        return new ResponseEntity<>(sorter.serialize(sortedList), HttpStatus.OK);
     }
 
-    @GetMapping("/merge")
+    /*@GetMapping("/merge")
     public ResponseEntity<String> merge(@RequestParam("list") String serializedUnsortedList) {
         int[] unsortedList;
         try {
-            unsortedList = unserialize(serializedUnsortedList);
-        }
-        catch(Exception e) {
+            unsortedList = sorter.unserialize(serializedUnsortedList);
+        } catch (Exception e) {
             return new ResponseEntity<>("List could not be unserialized. It needs to be in a format like this: \"1,2,3.\"", HttpStatus.BAD_REQUEST);
         }
+        // Sort the list using Merge Sort
+        int[] sortedList = sorter.mergeSort(unsortedList);
+        return new ResponseEntity<>(sorter.serialize(sortedList), HttpStatus.OK);
+    }*/
 
-        long startTime = System.nanoTime();
-        //Sort the list
-        int[] sortedList = unsortedList; //Change this into the required sorting method
-
-        long endTime = System.nanoTime();
-        long time = endTime - startTime;
-        repository.save(new Analytics(null, time, "type", 0/*iterations*/, serializedUnsortedList, serialize(sortedList)));
-        return new ResponseEntity<>(serialize(sortedList), HttpStatus.OK);
-    }
-
-    @GetMapping("/bucket")
+    @GetMapping("/quick")
     public ResponseEntity<String> quick(@RequestParam("list") String serializedUnsortedList) {
         int[] unsortedList;
         try {
-            unsortedList = unserialize(serializedUnsortedList);
-        }
-        catch(Exception e) {
+            unsortedList = sorter.unserialize(serializedUnsortedList);
+        } catch (Exception e) {
             return new ResponseEntity<>("List could not be unserialized. It needs to be in a format like this: \"1,2,3.\"", HttpStatus.BAD_REQUEST);
         }
-
-        long startTime = System.nanoTime();
-        //Sort the list
-        int[] sortedList = unsortedList; //Change this into the required sorting method
-
-        long endTime = System.nanoTime();
-        long time = endTime - startTime;
-        repository.save(new Analytics(null, time, "type", 0/*iterations*/, serializedUnsortedList, serialize(sortedList)));
-        return new ResponseEntity<>(serialize(sortedList), HttpStatus.OK);
+        // Sort the list using Quick Sort
+        int[] sortedList = sorter.quickSort(unsortedList);
+        return new ResponseEntity<>(sorter.serialize(sortedList), HttpStatus.OK);
     }
-
-    /*@GetMapping("/shell")
-    public ResponseEntity<String> shell(@RequestParam("list") String serializedUnsortedList) {
-        int[] unsortedList;
-        try {
-            unsortedList = unserialize(serializedUnsortedList);
-        } catch(Exception e) {
-            return new ResponseEntity<>("List could not be unserialized. It needs to be in a format like this: \"1,2,3.\"", HttpStatus.BAD_REQUEST);
-        }
-    
-        int n = unsortedList.length;
-        int iterations = 0;
-    
-        long startTime = System.nanoTime();
-    
-        for (int i = n / 2 - 1; i >= 0; i--) {
-            iterations++;
-            heapify(unsortedList, n, i);
-        }
-    
-        for (int i=n-1; i>=0; i--) {
-            iterations++;
-            int temp = unsortedList[0];
-            unsortedList[0] = unsortedList[i];
-            unsortedList[i] = temp;
-    
-            heapify(unsortedList, i, 0);
-        }
-    
-        long endTime = System.nanoTime();
-        long time = endTime - startTime;
-    
-        String type = "Shell";
-        String serializedSorted = serialize(unsortedList);
-    
-        repository.save(new Analytics(null, time, type, iterations, serializedUnsortedList, serializedSorted));
-        return new ResponseEntity<>(serializedSorted, HttpStatus.OK);
-    }*/
     
 
     @GetMapping("/heap")
