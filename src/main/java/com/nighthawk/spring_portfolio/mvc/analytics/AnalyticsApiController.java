@@ -67,7 +67,7 @@ public class AnalyticsApiController {
                      .toArray();
     }
 
-    /*Sorting Types:
+    /*Sorting Types: 
     Bubble Sort
     Selection Sort
     Insertion Sort
